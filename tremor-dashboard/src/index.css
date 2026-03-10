@@ -1,0 +1,28 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  font-family: "Inter", "Segoe UI", "Helvetica Neue", sans-serif;
+  color: #eef4ff;
+  background: #06101f;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  background: linear-gradient(90deg, #050d1a 0%, #05101d 48%, #05101d 100%);
+}
+
+#root {
+  min-height: 100vh;
+}
