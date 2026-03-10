@@ -247,19 +247,46 @@ const INITIAL_PROJECT_ISSUES = [
 ]
 
 function App() {
-  const [screen, setScreen] = useState('home')
-  const [rightPanelOpen, setRightPanelOpen] = useState(false)
-  const [activeDocument, setActiveDocument] = useState(null)
+  const captureParams = new URLSearchParams(window.location.search)
+  const captureScreen = captureParams.get('screen')
+  const capturePropertyId = captureParams.get('property') || 'londale'
+  const initialProperty = PROPERTIES.find((p) => p.id === capturePropertyId) || PROPERTIES[0]
+  const initialScreen = (() => {
+    if (captureScreen === 'existing-conversation-right') return 'existing-conversation'
+    if (captureScreen === 'blueprint-launch') return 'new-conversation'
+    if (
+      captureScreen === 'home' ||
+      captureScreen === 'project-detail' ||
+      captureScreen === 'new-conversation' ||
+      captureScreen === 'existing-conversation' ||
+      captureScreen === 'blueprint-drawer' ||
+      captureScreen === 'standalone-chat'
+    ) {
+      return captureScreen
+    }
+    return 'home'
+  })()
+  const startsExistingThread =
+    captureScreen === 'existing-conversation' || captureScreen === 'existing-conversation-right'
+  const startsBlueprintLaunch = captureScreen === 'blueprint-launch'
+
+  const [screen, setScreen] = useState(initialScreen)
+  const [rightPanelOpen, setRightPanelOpen] = useState(captureScreen === 'existing-conversation-right')
+  const [activeDocument, setActiveDocument] = useState(
+    captureScreen === 'existing-conversation-right' ? 'Lease_25Londale.pdf' : null,
+  )
   const [activeReference, setActiveReference] = useState('clause-4-2')
-  const [blueprintActive, setBlueprintActive] = useState(false)
-  const [blueprintName, setBlueprintName] = useState('')
-  const [documents, setDocuments] = useState([])
-  const [messages, setMessages] = useState([])
+  const [blueprintActive, setBlueprintActive] = useState(startsBlueprintLaunch)
+  const [blueprintName, setBlueprintName] = useState(
+    startsBlueprintLaunch ? 'Certificate of Title – Schedule 5' : '',
+  )
+  const [documents, setDocuments] = useState(startsExistingThread ? SAMPLE_DOCS : [])
+  const [messages, setMessages] = useState(startsExistingThread ? EXISTING_MESSAGES : [])
   const [inputValue, setInputValue] = useState('')
   const [checklist, setChecklist] = useState({})
   const [analyzing, setAnalyzing] = useState(false)
   const [portfolioView, setPortfolioView] = useState(false)
-  const [activeProperty, setActiveProperty] = useState(PROPERTIES[0])
+  const [activeProperty, setActiveProperty] = useState(initialProperty)
   const [projectIssues, setProjectIssues] = useState(INITIAL_PROJECT_ISSUES)
   const [issueFilter, setIssueFilter] = useState('All')
   const [workspaceAttachments, setWorkspaceAttachments] = useState([])
